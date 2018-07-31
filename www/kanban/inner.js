@@ -226,6 +226,8 @@ define([
                 if (boardJSON.jscolor == undefined) {
                     var jscolorL = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
                     jscolorL.show()
+                    console.log(jscolorL)
+                    console.log(boardJSON.jscolor)
                     boardJSON.jscolor = jscolorL
                     kanban.onChange();
                 }
