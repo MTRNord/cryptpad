@@ -216,10 +216,10 @@ define([
                     var boardJSON = kanban.getBoardJSON(board);
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
-                    console.log(colorL)
-                    if (currentColor !== colorL) {
+                    console.log(boardJSON.jscolor)
+                    if (currentColor !== boardJSON.jscolor.toString()) {
                         $(elL).removeClass("kanban-header-" + currentColor);
-                        boardJSON.color = jscolor.toString();
+                        boardJSON.color = boardJSON.jscolor.toString();
                         kanban.onChange();
                     }
                 }
