@@ -223,8 +223,7 @@ define([
                 $(el).addClass("kanban-header-" + nextColor);
                 kanban.onChange();
             },
-            buttonClick: function (el, boardId, e) {
-                e.stopPropagation();
+            buttonClick: function (el, boardId) {
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
                 UI.confirm(Messages.kanban_deleteBoard, function (yes) {
                     if (!yes) { return; }

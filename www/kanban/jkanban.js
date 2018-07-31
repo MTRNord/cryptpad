@@ -35,22 +35,15 @@
                 dragBoards: true,
                 addItemButton: false,
                 buttonContent: '+',
-                dragEl: function (el, source) {
-                },
-                dragendEl: function (el) {
-                },
-                dropEl: function (el, target, source, sibling) {
-                },
-                dragBoard: function (el, source) {
-                },
-                dragendBoard: function (el) {
-                },
-                dropBoard: function (el, target, source, sibling) {
-                },
-                click: function (el) {
-                },
-                buttonClick: function (el, boardId) {
-                }
+                dragEl: function (el, source) {},
+                dragendEl: function (el) {},
+                dropEl: function (el, target, source, sibling) {},
+                dragBoard: function (el, source) {},
+                dragendBoard: function (el) {},
+                dropBoard: function (el, target, source, sibling) {},
+                click: function (el) {},
+                boardTitleclick: function (el, boardId) {},
+                buttonClick: function (el, boardId) {}
             };
     
 
@@ -366,6 +359,15 @@
                     e.preventDefault;
                     self.options.click(this);
                     if (typeof(this.clickfn) === 'function')
+                        this.clickfn(this);
+                });
+            }
+
+            function __onboardTitleClickHandler(nodeItem, clickfn) {
+                nodeItem.addEventListener('click', function (e) {
+                    e.preventDefault;
+                    self.options.boardTitleClick(this, e);
+                    if (typeof (this.clickfn) === 'function')
                         this.clickfn(this);
                 });
             }
