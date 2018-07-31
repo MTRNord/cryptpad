@@ -225,7 +225,7 @@ define([
                 };
                 var jscolorL;
                 el._jscLinkedInstance = undefined;
-                jscolorL = new jscolor(el,{onFineChange: onchange(jscolorL), valueElement:undefined});
+                jscolorL = new jscolor(el,{onFineChange: onchange, valueElement:undefined});
                 jscolorL.show();
                 var currentColor = boardJSON.color;
                 jscolorL.fromString(currentColor);
