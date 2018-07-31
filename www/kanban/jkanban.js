@@ -374,14 +374,33 @@
                             var nodeItem = document.createElement('div');
                             nodeItem.classList.add('kanban-item');
                             nodeItem.dataset.eid = itemKanban.id;
-                            nodeItem.innerHTML = itemKanban.title;
+                            var nodeItemText = document.createElement('div');
+                            nodeItemText.classList.add('kanban-item-text');
+                            nodeItemText.dataset.eid = itemKanban.id;
+                            nodeItemText.innerHTML = itemKanban.title;
+                            nodeItem.appendChild(nodeItemText);
                             //add function
-                            nodeItem.clickfn = itemKanban.click;
-                            nodeItem.dragfn = itemKanban.drag;
-                            nodeItem.dragendfn = itemKanban.dragend;
-                            nodeItem.dropfn = itemKanban.drop;
+                            nodeItemText.clickfn = itemKanban.click;
+                            nodeItemText.dragfn = itemKanban.drag;
+                            nodeItemText.dragendfn = itemKanban.dragend;
+                            nodeItemText.dropfn = itemKanban.drop;
                             //add click handler of item
-                            __onclickHandler(nodeItem);
+                            __onclickHandler(nodeItemText);
+
+                            var onchange = function (colorL) {
+                                var currentColor = itemKanban.color;
+                                if (currentColor !== colorL.toString()) {
+                                    itemKanban.color = colorL.toString();
+                                    kanban.onChange();
+                                }
+                            };
+
+                            var jscolorL;
+                            nodeItem._jscLinkedInstance = undefined;
+                            jscolorL = new jscolor(nodeItem,{onFineChange: onchange, valueElement:undefined});
+                            var currentColor = itemKanban.color;
+                            jscolorL.fromString(currentColor);
+
                             contentBoard.appendChild(nodeItem);
                         }
                         //footer board
