@@ -237,7 +237,13 @@
                     allClasses.map(function (value) {
                         headerBoard.classList.add(value);
                     });
-                    headerBoard.innerHTML = '<div class="kanban-title-board">' + board.title + '</div>';
+                    titleBoard = document.createElement('div');
+                    titleBoard.classList.add('kanban-title-board');
+                    titleBoard.innerHTML = board.title;
+                    titleBoard.clickfn = board.boardTitleClick;
+                    __onboardTitleClickHandler(titleBoard);
+                    headerBoard.appendChild(titleBoard);
+                    __onColorClickHandler(headerBoard);
                     // if add button is true, add button to the board
                     if (addButton) {
                         var btn = document.createElement("BUTTON");
