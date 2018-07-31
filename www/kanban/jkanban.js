@@ -48,8 +48,8 @@
                 this.buttonContent = '+';
                 defaults = {
                     element: '',
-                    gutter: '5px',
-                    widthBoard: '300px',
+                    gutter: '15px',
+                    widthBoard: '250px',
                     responsive: '700',
                     colors: ["yellow", "green", "blue", "red", "orange"],
                     responsivePercentage: false,

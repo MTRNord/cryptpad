@@ -104,9 +104,9 @@ define([
             }).click(function (e) { e.stopPropagation(); });
         };
 
-        var kanban = new jKanban({
+        var kanban = new window.jKanban({
             element: '#cp-app-kanban-content',
-            gutter: '15px',
+            gutter: '5px',
             widthBoard: '300px',
             buttonContent: '❌',
             colors: COLORS,
