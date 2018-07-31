@@ -341,6 +341,10 @@
                             headerBoard.classList.add(value);
                         });
                         if (board.color !== '' && board.color !== undefined) {
+                            headerBoard._jscLinkedInstance = undefined;
+                            jscolorL = new jscolor(headerBoard,{valueElement:undefined});
+                            jscolorL.fromString(board.color);
+                            headerBoard._jscLinkedInstance = undefined;
                             headerBoard.classList.add("kanban-header-" + board.color);
                         }
                         titleBoard = document.createElement('div');
