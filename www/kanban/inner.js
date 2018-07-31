@@ -213,10 +213,11 @@ define([
                 var onColorChange = function (colorL) {
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
-                    console.log(boardJSON.jscolor.toString())
-                    if (currentColor !== boardJSON.jscolor.toString()) {
+                    console.log(colorL)
+                    console.log(colorL.toString())
+                    if (currentColor !== colorL.toString()) {
                         $(el).removeClass("kanban-header-" + currentColor);
-                        boardJSON.color = boardJSON.jscolor.toString();
+                        boardJSON.color = colorL.toString();
                         kanban.onChange();
                     }
                 }
@@ -224,7 +225,7 @@ define([
                     var jscolorL = new jscolor(el,{onchange: onColorChange, valueElement:undefined})
                     jscolorL.show()
                     //boardJSON.jscolor = jscolorL
-                    kanban.onChange();
+                    //kanban.onChange();
                 }
                 var currentColor = boardJSON.color;
                 boardJSON.jscolor.fromString(currentColor)
