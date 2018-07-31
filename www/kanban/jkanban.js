@@ -36,9 +36,6 @@
             var dragula = require('dragula');
 
 
-            (function() {
-
-
                 this.jKanban = function() {
                     var self = this;
                     this.element = '';
@@ -402,7 +399,6 @@
                     //init plugin
                     this.init();
                 };
-            }());
 
 
 
