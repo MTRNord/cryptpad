@@ -216,7 +216,6 @@ define([
                     var boardJSONL = kanban.getBoardJSON(boardL);
                     var currentColor = boardJSONL.color;
                     verbose("Current color " + currentColor);
-                    console.log(colorL);
                     console.log(colorL.toString());
                     if (currentColor !== colorL.toString()) {
                         $(elL).removeClass("kanban-header-" + currentColor);
@@ -225,11 +224,9 @@ define([
                     }
                 };
                 el._jscLinkedInstance = undefined;
-                var jscolorL = new jscolor(el,{valueElement:undefined});
-                el.addEventListener("change", onchange(jscolorL));
+                var jscolorL = new jscolor(el,{onFineChange: onchange, valueElement:undefined});
                 jscolorL.show();
                 var currentColor = boardJSON.color;
-                console.log(el.onchange);
                 jscolorL.fromString(currentColor);
             },
             buttonClick: function (el, boardId) {
