@@ -221,14 +221,16 @@ define([
                         kanban.onChange();
                     }
                 }
+                var jscolorL = undefined
                 if (boardJSON.jscolor == undefined) {
-                    var jscolorL = new jscolor(el,{onchange: onColorChange, valueElement:undefined})
+                    jscolorL = new jscolor(el,{onchange: onColorChange, valueElement:undefined})
                     jscolorL.show()
                     //boardJSON.jscolor = jscolorL
                     //kanban.onChange();
                 }
                 var currentColor = boardJSON.color;
-                boardJSON.jscolor.fromString(currentColor)
+                console.log(currentColor)
+                jscolorL.fromString(currentColor)
             },
             buttonClick: function (el, boardId) {
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
