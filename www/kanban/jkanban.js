@@ -146,12 +146,12 @@
 
 
                         //Init Drag Item
-                        self.drake = self.dragula(self.boardContainer, function() {
-                            moves: function(el, source, handle, sibling) {
+                        self.drake = self.dragula(self.boardContainer, {
+                            moves: function (el, source, handle, sibling) {
                                 if (self.options.readOnly) { return false; }
                                 return handle.classList.contains('kanban-item');
                             },
-                            accepts: function(el, target, source, sibling) {
+                            accepts: function (el, target, source, sibling) {
                                 if (self.options.readOnly) { return false; }
                                 return true;
                             },
