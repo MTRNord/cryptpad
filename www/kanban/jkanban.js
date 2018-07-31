@@ -11,7 +11,7 @@
             var l = n[o] = {
                 exports: {}
             };
-            t[o][0].call(l.exports, function(e) {
+            t[o][0].call(l.exports, function (e) {
                 var n = t[o][1][e];
                 return s(n ? n : e)
             }, l, l.exports, e, t, n, r)
@@ -22,7 +22,7 @@
     for (var o = 0; o < r.length; o++) s(r[o]);
     return s
 })({
-    1: [function(require, module, exports) {
+    1: [function (require, module, exports) {
         /**
          * jKanban
          * Vanilla Javascript plugin for manage kanban boards
@@ -31,15 +31,12 @@
          * @author: Riccardo Tartaglia
          */
 
-
             //Require dragula
         var dragula = require('dragula');
 
+        (function () {
 
-        (function() {
-
-
-            this.jKanban = function() {
+            this.jKanban = function () {
                 var self = this;
                 this.element = '';
                 this.container = '';
@@ -60,63 +57,64 @@
                     dragBoards: true,
                     addItemButton: false,
                     buttonContent: '+',
-                    dragEl: function(el, source) {},
-                    dragendEl: function(el) {},
-                    dropEl: function(el, target, source, sibling) {},
-                    dragBoard: function(el, source) {},
-                    dragendBoard: function(el) {},
-                    dropBoard: function(el, target, source, sibling) {},
-                    click: function(el) {},
-                    boardTitleclick: function(el, boardId) {},
-                    buttonClick: function(el, boardId) {},
-                    colorClick: function(el, boardId) {},
-                    onChange: function() {}
+                    readOnly: false,
+                    dragEl: function (el, source) {},
+                    dragendEl: function (el) {},
+                    dropEl: function (el, target, source, sibling) {},
+                    dragcancelEl: function (el, boardId) {},
+                    dragBoard: function (el, source) {},
+                    dragendBoard: function (el) {},
+                    dropBoard: function (el, target, source, sibling) {},
+                    click: function (el) {},
+                    boardTitleclick: function (el, boardId) {},
+                    buttonClick: function (el, boardId) {},
+                    colorClick: function (el, boardId) {},
+                    addItemClick: function (el, boardId) {},
+                    onChange: function () {}
                 };
-
 
                 if (arguments[0] && typeof arguments[0] === "object") {
                     this.options = __extendDefaults(defaults, arguments[0]);
                 }
 
-
-                this.init = function() {
-                    //set initial boards
+                this.init = function () {
+                    // set initial boards
                     __setBoard();
                     //set drag with dragula
                     if (window.innerWidth > self.options.responsive) {
 
-
                         //Init Drag Board
                         self.drakeBoard = self.dragula([self.container], {
-                            moves: function(el, source, handle, sibling) {
+                            moves: function (el, source, handle, sibling) {
                                 if (self.options.readOnly) { return false; }
                                 if (!self.options.dragBoards) return false;
                                 return (handle.classList.contains('kanban-board-header') || handle.classList.contains('kanban-title-board'));
                             },
-                            accepts: function(el, target, source, sibling) {
+                            accepts: function (el, target, source, sibling) {
                                 if (self.options.readOnly) { return false; }
                                 return target.classList.contains('kanban-container');
                             },
                             revertOnSpill: true,
                             direction: 'horizontal',
                         })
-                            .on('drag', function(el, source) {
+                            .on('drag', function (el, source) {
                                 el.classList.add('is-moving');
                                 self.options.dragBoard(el, source);
-                                if (typeof(el.dragfn) === 'function')
+                                if (typeof (el.dragfn) === 'function')
                                     el.dragfn(el, source);
                             })
-                            .on('dragend', function(el) {
+                            .on('dragend', function (el) {
                                 el.classList.remove('is-moving');
                                 self.options.dragendBoard(el);
-                                if (typeof(el.dragendfn) === 'function')
+                                if (typeof (el.dragendfn) === 'function')
                                     el.dragendfn(el);
                             })
-                            .on('drop', function(el, target, source, sibling) {
+                            .on('drop', function (el, target, source, sibling) {
                                 el.classList.remove('is-moving');
                                 self.options.dropBoard(el, target, source, sibling);
-                                if (typeof(el.dropfn) === 'function')
-                                    el.dropfn(el, target, source, sibling);
+                                if (typeof (el.dropfn) === 'function')
+                                    el.dropfn(el, target, source, sibling);                                   el.dropfn(el, target, source, sibling);
+
                                 // TODO: update board object board order
                                 console.log("Drop " + $(el).attr("data-id") + " just before " + (sibling ? $(sibling).attr("data-id") : " end "));
                                 var index1, index2;
@@ -142,8 +140,8 @@
                                 self.options.boards.splice(index2, 0, self.options.boards.splice(index1, 1)[0]);
                                 // send event that board has changed
                                 self.onChange();
-                            });
 
+                            });
 
                         //Init Drag Item
                         self.drake = self.dragula(self.boardContainer, {
@@ -160,25 +158,28 @@
                             .on('cancel', function(el, container, source) {
                                 self.enableAllBoards();
                             })
-                            .on('drag', function(el, source) {
+                            .on('drag', function (el, source) {
+                                // we need to calculate the position before starting to drag
+                                self.dragItemPos = self.findElementPosition(el);
+
                                 el.classList.add('is-moving');
                                 var boardJSON = __findBoardJSON(source.parentNode.dataset.id);
                                 if (boardJSON.dragTo !== undefined) {
-                                    self.options.boards.map(function(board) {
+                                    self.options.boards.map(function (board) {
                                         if (boardJSON.dragTo.indexOf(board.id) === -1 && board.id !== source.parentNode.dataset.id) {
                                             self.findBoard(board.id).classList.add('disabled-board');
                                         }
                                     })
                                 }
 
-
                                 self.options.dragEl(el, source);
-                                if (el !== null && typeof(el.dragfn) === 'function')
+                                if (el !== null && typeof (el.dragfn) === 'function')
                                     el.dragfn(el, source);
                             })
-                            .on('dragend', function(el) {
+                            .on('dragend', function (el) {
+                                console.log("In dragend");
                                 self.options.dragendEl(el);
-                                if (el !== null && typeof(el.dragendfn) === 'function')
+                                if (el !== null && typeof (el.dragendfn) === 'function')
                                     el.dragendfn(el);
                             })
                             .on('cancel', function (el, container, source) {
@@ -190,7 +191,33 @@
                             .on('drop', function(el, target, source, sibling) {
                                 self.enableAllBoards();
 
+                                console.log("In drop");
 
+                                // TODO: update board object board order
+                                var board1;
+                                self.options.boards.some(function (element) {
+                                    if (element.id === $(source.parentNode).attr("data-id")) {
+                                        return board1 = element;
+                                    }
+                                });
+                                var board2;
+                                self.options.boards.some(function (element) {
+                                    if (element.id === $(target.parentNode).attr("data-id")) {
+                                        return board2 = element;
+                                    }
+                                });
+                                var pos1 = self.dragItemPos;
+                                var pos2 = (sibling) ? self.findElementPosition(sibling) : (board2.item.length + 1);
+                                console.log("Drop element " + pos1 + " before " + pos2);
+
+                                // TODO: update board object item order
+
+                                var allB = document.querySelectorAll('.kanban-board');
+                                if (allB.length > 0 && allB !== undefined) {
+                                    for (var i = 0; i < allB.length; i++) {
+                                        allB[i].classList.remove('disabled-board');
+                                    }
+                                }
                                 var boardJSON = __findBoardJSON(source.parentNode.dataset.id);
                                 if (boardJSON.dragTo !== undefined) {
                                     if (boardJSON.dragTo.indexOf(target.parentNode.dataset.id) === -1 && target.parentNode.dataset.id !== source.parentNode.dataset.id) {
@@ -200,15 +227,24 @@
                                 if (el !== null) {
                                     self.options.dropEl(el, target, source, sibling);
                                     el.classList.remove('is-moving');
-                                    if (typeof(el.dropfn) === 'function')
+                                    if (typeof (el.dropfn) === 'function')
                                         el.dropfn(el, target, source, sibling);
                                 }
+
+                                var item = board1.item[pos1];
+                                // if (board1==board2 && pos2<pos1)
+                                //   pos2 = pos2;
+
+                                // moving element to target array
+                                board1.item.splice(pos1, 1);
+                                board2.item.splice(pos2 - 1, 0, item);
+
                                 // send event that board has changed
                                 self.onChange();
+
                             })
                     }
                 };
-
 
                 this.enableAllBoards = function() {
                     var allB = document.querySelectorAll('.kanban-board');
@@ -219,8 +255,13 @@
                     }
                 };
 
+                this.addElement = function (boardID, element) {
 
-                this.addElement = function(boardID, element) {
+                    // add Element to JSON
+                    var boardJSON = __findBoardJSON(boardID);
+                    boardJSON.item.push({
+                        title: element.title
+                    });
                     var board = self.element.querySelector('[data-id="' + boardID + '"] .kanban-drag');
                     var nodeItem = document.createElement('div');
                     nodeItem.classList.add('kanban-item');
@@ -240,8 +281,7 @@
                     return self;
                 };
 
-
-                this.addForm = function(boardID, formItem) {
+                this.addForm = function (boardID, formItem) {
                     var board = self.element.querySelector('[data-id="' + boardID + '"] .kanban-drag');
                     board.appendChild(formItem);
                     return self;
@@ -264,14 +304,12 @@
                     var buttonContent = self.options.buttonContent;
 
 
-
-
                     //for on all the boards
                     for (var boardkey in boards) {
                         // single board
                         var board = boards[boardkey];
-                        self.options.boards.push(board);
-
+                        if (self.options.boards !== boards)
+                            self.options.boards.push(board);
 
                         if (!self.options.responsivePercentage) {
                             //add width to container
@@ -299,7 +337,7 @@
                             var allClasses = board.class.split(",");
                         else allClasses = [];
                         headerBoard.classList.add('kanban-board-header');
-                        allClasses.map(function(value) {
+                        allClasses.map(function (value) {
                             headerBoard.classList.add(value);
                         });
                         if (board.color !== '' && board.color !== undefined) {
@@ -312,12 +350,11 @@
                         __onboardTitleClickHandler(titleBoard);
                         headerBoard.appendChild(titleBoard);
                         __onColorClickHandler(headerBoard);
+
                         // if add button is true, add button to the board
                         if (addButton) {
                             var btn = document.createElement("BUTTON");
-                            var t = document.createTextNode(buttonContent);
-                            btn.setAttribute("class", "kanban-title-button btn btn-default btn-xs");
-                            btn.appendChild(t);
+                            btn.setAttribute("class", "kanban-title-button btn btn-default btn-xs fa fa-times");
                             //var buttonHtml = '<button class="kanban-title-button btn btn-default btn-xs">'+buttonContent+'</button>'
                             headerBoard.appendChild(btn);
                             __onButtonClickHandler(btn, board.id);
@@ -345,6 +382,12 @@
                         }
                         //footer board
                         var footerBoard = document.createElement('footer');
+                        //add button
+                        var addBoardItem = document.createElement('button');
+                        $(addBoardItem).addClass("kanban-additem btn btn-default fa fa-plus");
+                        footerBoard.appendChild(addBoardItem);
+                        __onAddItemClickHandler(addBoardItem);
+
                         //board assembly
                         boardNode.appendChild(headerBoard);
                         boardNode.appendChild(contentBoard);
@@ -359,32 +402,38 @@
                     return self;
                 }
 
+                this.setBoards = function (boards) {
+                    self.element
+                    for (var boardkey in this.options.boards) {
+                        var board = this.options.boards[boardkey];
+                        this.removeBoard(board.id);
+                    }
+                    this.options.boards = [];
+                    this.addBoards(boards);
+                }
 
-                this.findBoard = function(id) {
+                this.findBoard = function (id) {
                     var el = self.element.querySelector('[data-id="' + id + '"]');
                     return el;
                 }
 
-
-                this.findElement = function(id) {
+                this.findElement = function (id) {
                     var el = self.element.querySelector('[data-eid="' + id + '"]');
                     return el;
                 }
 
-                this.findElementPosition = function(el) {
+                this.findElementPosition = function (el) {
                     // we are looking at the element position in the child array
                     return $(el.parentNode.children).index(el);
                 }
 
-
-                this.getBoardElements = function(id) {
+                this.getBoardElements = function (id) {
                     var board = self.element.querySelector('[data-id="' + id + '"] .kanban-drag');
                     return (board.childNodes);
                 }
 
-
-                this.removeElement = function(el) {
-                    if (typeof(el) === 'string')
+                this.removeElement = function (el) {
+                    if (typeof (el) === 'string')
                         el = self.element.querySelector('[data-eid="' + el + '"]');
                     el.remove();
 
@@ -394,9 +443,8 @@
                     return self;
                 };
 
-
-                this.removeBoard = function(board) {
-                    if (typeof(board) === 'string')
+                this.removeBoard = function (board) {
+                    if (typeof (board) === 'string')
                         board = self.element.querySelector('[data-id="' + board + '"]');
                     if (board) {
                         board.remove();
@@ -404,26 +452,24 @@
                         // send event that board has changed
                         self.onChange();
                     }
+
                     return self;
                 }
 
-
                 // board button on click function
-                this.onButtonClick = function(el) {
-
+                this.onButtonClick = function (el) {
 
                 }
 
-                this.onChange = function() {
+                this.onChange = function () {
                     self.options.onChange();
                 }
 
-                this.getBoardsJSON = function(id) {
+                this.getBoardsJSON = function (id) {
                     return self.options.boards;
                 }
 
-
-                this.getBoardJSON = function(id) {
+                this.getBoardJSON = function (id) {
                     return __findBoardJSON(id);
                 }
 
@@ -437,7 +483,6 @@
                     }
                     return source;
                 }
-
 
                 function __setBoard() {
                     self.element = document.querySelector(self.options.element);
@@ -462,48 +507,56 @@
                     self.onChange();
                 };
 
-
                 function __onclickHandler(nodeItem, clickfn) {
-                    nodeItem.addEventListener('click', function(e) {
+                    nodeItem.addEventListener('click', function (e) {
                         e.preventDefault;
                         self.options.click(this);
-                        if (typeof(this.clickfn) === 'function')
+                        if (typeof (this.clickfn) === 'function')
                             this.clickfn(this);
                     });
                 }
 
                 function __onboardTitleClickHandler(nodeItem, clickfn) {
-                    nodeItem.addEventListener('click', function(e) {
+                    nodeItem.addEventListener('click', function (e) {
                         e.preventDefault;
                         self.options.boardTitleClick(this, e);
-                        if (typeof(this.clickfn) === 'function')
+                        if (typeof (this.clickfn) === 'function')
                             this.clickfn(this);
                     });
                 }
 
                 function __onColorClickHandler(nodeItem, clickfn) {
-                    nodeItem.addEventListener('click', function(e) {
+                    nodeItem.addEventListener('click', function (e) {
                         e.preventDefault;
                         self.options.colorClick(this);
-                        if (typeof(this.clickfn) === 'function')
+                        if (typeof (this.clickfn) === 'function')
                             this.clickfn(this);
                     });
                 }
 
+                function __onAddItemClickHandler(nodeItem, clickfn) {
+                    nodeItem.addEventListener('click', function (e) {
+                        e.preventDefault;
+                        e.stopPropagation();
+                        self.options.addItemClick(this);
+                        if (typeof (this.clickfn) === 'function')
+                            this.clickfn(this);
+                    });
+                }
 
                 function __onButtonClickHandler(nodeItem, boardId) {
-                    nodeItem.addEventListener('click', function(e) {
+                    nodeItem.addEventListener('click', function (e) {
+                        e.stopPropagation();
                         e.preventDefault;
-                        self.options.buttonClick(this, boardId);
+                        self.options.buttonClick(this, boardId, e);
                         // if(typeof(this.clickfn) === 'function')
                         //     this.clickfn(this);
                     });
                 }
 
-
                 function __findBoardJSON(id) {
                     var el = []
-                    self.options.boards.map(function(board) {
+                    self.options.boards.map(function (board) {
                         if (board.id === id) {
                             return el.push(board)
                         }
@@ -512,32 +565,25 @@
                 }
 
 
-
-
                 //init plugin
                 this.init();
             };
         }());
 
 
-
-
     }, {
         "dragula": 9
     }],
-    2: [function(require, module, exports) {
+    2: [function (require, module, exports) {
         module.exports = function atoa(a, n) {
             return Array.prototype.slice.call(a, n);
         }
 
-
     }, {}],
-    3: [function(require, module, exports) {
+    3: [function (require, module, exports) {
         'use strict';
 
-
         var ticky = require('ticky');
-
 
         module.exports = function debounce(fn, args, ctx) {
             if (!fn) {
@@ -548,17 +594,14 @@
             });
         };
 
-
     }, {
         "ticky": 10
     }],
-    4: [function(require, module, exports) {
+    4: [function (require, module, exports) {
         'use strict';
-
 
         var atoa = require('atoa');
         var debounce = require('./debounce');
-
 
         module.exports = function emitter(thing, options) {
             var opts = options || {};
@@ -566,7 +609,7 @@
             if (thing === undefined) {
                 thing = {};
             }
-            thing.on = function(type, fn) {
+            thing.on = function (type, fn) {
                 if (!evt[type]) {
                     evt[type] = [fn];
                 } else {
@@ -574,12 +617,12 @@
                 }
                 return thing;
             };
-            thing.once = function(type, fn) {
+            thing.once = function (type, fn) {
                 fn._once = true; // thing.off(fn) still works!
                 thing.on(type, fn);
                 return thing;
             };
-            thing.off = function(type, fn) {
+            thing.off = function (type, fn) {
                 var c = arguments.length;
                 if (c === 1) {
                     delete evt[type];
@@ -594,13 +637,13 @@
                 }
                 return thing;
             };
-            thing.emit = function() {
+            thing.emit = function () {
                 var args = atoa(arguments);
                 return thing.emitterSnapshot(args.shift()).apply(this, args);
             };
-            thing.emitterSnapshot = function(type) {
+            thing.emitterSnapshot = function (type) {
                 var et = (evt[type] || []).slice(0);
-                return function() {
+                return function () {
                     var args = atoa(arguments);
                     var ctx = this || thing;
                     if (type === 'error' && opts.throws !== false && !et.length) {
@@ -622,15 +665,13 @@
             return thing;
         };
 
-
     }, {
         "./debounce": 3,
         "atoa": 2
     }],
-    5: [function(require, module, exports) {
-        (function(global) {
+    5: [function (require, module, exports) {
+        (function (global) {
             'use strict';
-
 
             var customEvent = require('custom-event');
             var eventmap = require('./eventmap');
@@ -639,12 +680,10 @@
             var removeEvent = removeEventEasy;
             var hardCache = [];
 
-
             if (!global.addEventListener) {
                 addEvent = addEventHard;
                 removeEvent = removeEventHard;
             }
-
 
             module.exports = {
                 add: addEvent,
@@ -652,21 +691,17 @@
                 fabricate: fabricateEvent
             };
 
-
             function addEventEasy(el, type, fn, capturing) {
                 return el.addEventListener(type, fn, capturing);
             }
-
 
             function addEventHard(el, type, fn) {
                 return el.attachEvent('on' + type, wrap(el, type, fn));
             }
 
-
             function removeEventEasy(el, type, fn, capturing) {
                 return el.removeEventListener(type, fn, capturing);
             }
-
 
             function removeEventHard(el, type, fn) {
                 var listener = unwrap(el, type, fn);
@@ -674,7 +709,6 @@
                     return el.detachEvent('on' + type, listener);
                 }
             }
-
 
             function fabricateEvent(el, type, model) {
                 var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
@@ -702,7 +736,6 @@
                 }
             }
 
-
             function wrapperFactory(el, type, fn) {
                 return function wrapper(originalEvent) {
                     var e = originalEvent || global.event;
@@ -718,7 +751,6 @@
                 };
             }
 
-
             function wrap(el, type, fn) {
                 var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
                 hardCache.push({
@@ -730,7 +762,6 @@
                 return wrapper;
             }
 
-
             function unwrap(el, type, fn) {
                 var i = find(el, type, fn);
                 if (i) {
@@ -739,7 +770,6 @@
                     return wrapper;
                 }
             }
-
 
             function find(el, type, fn) {
                 var i, item;
@@ -751,21 +781,18 @@
                 }
             }
 
-
         }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
     }, {
         "./eventmap": 6,
         "custom-event": 7
     }],
-    6: [function(require, module, exports) {
-        (function(global) {
+    6: [function (require, module, exports) {
+        (function (global) {
             'use strict';
-
 
             var eventmap = [];
             var eventname = '';
             var ron = /^on/;
-
 
             for (eventname in global) {
                 if (ron.test(eventname)) {
@@ -773,18 +800,14 @@
                 }
             }
 
-
             module.exports = eventmap;
-
 
         }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
     }, {}],
-    7: [function(require, module, exports) {
-        (function(global) {
-
+    7: [function (require, module, exports) {
+        (function (global) {
 
             var NativeCustomEvent = global.CustomEvent;
-
 
             function useNative() {
                 try {
@@ -798,7 +821,6 @@
                 return false;
             }
 
-
             /**
              * Cross-browser `CustomEvent` constructor.
              *
@@ -807,9 +829,7 @@
              * @public
              */
 
-
             module.exports = useNative() ? NativeCustomEvent :
-
 
                 // IE >= 9
                 'function' === typeof document.createEvent ? function CustomEvent(type, params) {
@@ -821,7 +841,6 @@
                         }
                         return e;
                     } :
-
 
                     // IE <= 8
                     function CustomEvent(type, params) {
@@ -839,17 +858,14 @@
                         return e;
                     }
 
-
         }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
     }, {}],
-    8: [function(require, module, exports) {
+    8: [function (require, module, exports) {
         'use strict';
-
 
         var cache = {};
         var start = '(?:^|\\s)';
         var end = '(?:\\s|$)';
-
 
         function lookupClass(className) {
             var cached = cache[className];
@@ -861,7 +877,6 @@
             return cached;
         }
 
-
         function addClass(el, className) {
             var current = el.className;
             if (!current.length) {
@@ -871,30 +886,25 @@
             }
         }
 
-
         function rmClass(el, className) {
             el.className = el.className.replace(lookupClass(className), ' ').trim();
         }
-
 
         module.exports = {
             add: addClass,
             rm: rmClass
         };
 
-
     }, {}],
-    9: [function(require, module, exports) {
-        (function(global) {
+    9: [function (require, module, exports) {
+        (function (global) {
             'use strict';
-
 
             var emitter = require('contra/emitter');
             var crossvent = require('crossvent');
             var classes = require('./classes');
             var doc = document;
             var documentElement = doc.documentElement;
-
 
             function dragula(initialContainers, options) {
                 var len = arguments.length;
@@ -915,7 +925,6 @@
                 var _renderTimer; // timer for setTimeout renderMirrorImage
                 var _lastDropTarget = null; // last container item was over
                 var _grabbed; // holds mousedown context until first mousemove
-
 
                 var o = options || {};
                 if (o.moves === void 0) {
@@ -955,7 +964,6 @@
                     o.mirrorContainer = doc.body;
                 }
 
-
                 var drake = emitter({
                     containers: o.containers,
                     start: manualStart,
@@ -967,22 +975,17 @@
                     dragging: false
                 });
 
-
                 if (o.removeOnSpill === true) {
                     drake.on('over', spillOver).on('out', spillOut);
                 }
 
-
                 events();
 
-
                 return drake;
-
 
                 function isContainer(el) {
                     return drake.containers.indexOf(el) !== -1 || o.isContainer(el);
                 }
-
 
                 function events(remove) {
                     var op = remove ? 'remove' : 'add';
@@ -990,12 +993,10 @@
                     touchy(documentElement, op, 'mouseup', release);
                 }
 
-
                 function eventualMovements(remove) {
                     var op = remove ? 'remove' : 'add';
                     touchy(documentElement, op, 'mousemove', startBecauseMouseMoved);
                 }
-
 
                 function movements(remove) {
                     var op = remove ? 'remove' : 'add';
@@ -1003,12 +1004,10 @@
                     crossvent[op](documentElement, 'click', preventGrabbed);
                 }
 
-
                 function destroy() {
                     events(true);
                     release({});
                 }
-
 
                 function preventGrabbed(e) {
                     if (_grabbed) {
@@ -1016,11 +1015,9 @@
                     }
                 }
 
-
                 function grab(e) {
                     _moveX = e.clientX;
                     _moveY = e.clientY;
-
 
                     var ignore = whichMouseButton(e) !== 1 || e.metaKey || e.ctrlKey;
                     if (ignore) {
@@ -1041,7 +1038,6 @@
                         }
                     }
                 }
-
 
                 function startBecauseMouseMoved(e) {
                     if (!_grabbed) {
@@ -1064,24 +1060,20 @@
                         }
                     }
 
-
                     var grabbed = _grabbed; // call to end() unsets _grabbed
                     eventualMovements(true);
                     movements();
                     end();
                     start(grabbed);
 
-
                     var offset = getOffset(_item);
                     _offsetX = getCoord('pageX', e) - offset.left;
                     _offsetY = getCoord('pageY', e) - offset.top;
-
 
                     classes.add(_copy || _item, 'gu-transit');
                     renderMirrorImage();
                     drag(e);
                 }
-
 
                 function canStart(item) {
                     if (drake.dragging && _mirror) {
@@ -1108,12 +1100,10 @@
                         return;
                     }
 
-
                     var movable = o.moves(item, source, handle, nextEl(item));
                     if (!movable) {
                         return;
                     }
-
 
                     return {
                         item: item,
@@ -1121,11 +1111,9 @@
                     };
                 }
 
-
                 function canMove(item) {
                     return !!canStart(item);
                 }
-
 
                 function manualStart(item) {
                     var context = canStart(item);
@@ -1134,28 +1122,23 @@
                     }
                 }
 
-
                 function start(context) {
                     if (isCopy(context.item, context.source)) {
                         _copy = context.item.cloneNode(true);
                         drake.emit('cloned', _copy, context.item, 'copy');
                     }
 
-
                     _source = context.source;
                     _item = context.item;
                     _initialSibling = _currentSibling = nextEl(context.item);
-
 
                     drake.dragging = true;
                     drake.emit('drag', _item, _source);
                 }
 
-
                 function invalidTarget() {
                     return false;
                 }
-
 
                 function end() {
                     if (!drake.dragging) {
@@ -1165,17 +1148,14 @@
                     drop(item, getParent(item));
                 }
 
-
                 function ungrab() {
                     _grabbed = false;
                     eventualMovements(true);
                     movements(true);
                 }
 
-
                 function release(e) {
                     ungrab();
-
 
                     if (!drake.dragging) {
                         return;
@@ -1194,7 +1174,6 @@
                     }
                 }
 
-
                 function drop(item, target) {
                     var parent = getParent(item);
                     if (_copy && o.copySortSource && target === _source) {
@@ -1208,7 +1187,6 @@
                     cleanup();
                 }
 
-
                 function remove() {
                     if (!drake.dragging) {
                         return;
@@ -1221,7 +1199,6 @@
                     drake.emit(_copy ? 'cancel' : 'remove', item, parent, _source);
                     cleanup();
                 }
-
 
                 function cancel(revert) {
                     if (!drake.dragging) {
@@ -1248,7 +1225,6 @@
                     cleanup();
                 }
 
-
                 function cleanup() {
                     var item = _copy || _item;
                     ungrab();
@@ -1267,7 +1243,6 @@
                     _source = _item = _copy = _initialSibling = _currentSibling = _renderTimer = _lastDropTarget = null;
                 }
 
-
                 function isInitialPlacement(target, s) {
                     var sibling;
                     if (s !== void 0) {
@@ -1280,7 +1255,6 @@
                     return target === _source && sibling === _initialSibling;
                 }
 
-
                 function findDropTarget(elementBehindCursor, clientX, clientY) {
                     var target = elementBehindCursor;
                     while (target && !accepted()) {
@@ -1288,13 +1262,11 @@
                     }
                     return target;
 
-
                     function accepted() {
                         var droppable = isContainer(target);
                         if (droppable === false) {
                             return false;
                         }
-
 
                         var immediate = getImmediateChild(target, elementBehindCursor);
                         var reference = getReference(target, immediate, clientX, clientY);
@@ -1306,23 +1278,19 @@
                     }
                 }
 
-
                 function drag(e) {
                     if (!_mirror) {
                         return;
                     }
                     e.preventDefault();
 
-
                     var clientX = getCoord('clientX', e);
                     var clientY = getCoord('clientY', e);
                     var x = clientX - _offsetX;
                     var y = clientY - _offsetY;
 
-
                     _mirror.style.left = x + 'px';
                     _mirror.style.top = y + 'px';
-
 
                     var item = _copy || _item;
                     var elementBehindCursor = getElementBehindPoint(_mirror, clientX, clientY);
@@ -1380,18 +1348,15 @@
                     }
                 }
 
-
                 function spillOver(el) {
                     classes.rm(el, 'gu-hide');
                 }
-
 
                 function spillOut(el) {
                     if (drake.dragging) {
                         classes.add(el, 'gu-hide');
                     }
                 }
-
 
                 function renderMirrorImage() {
                     if (_mirror) {
@@ -1409,7 +1374,6 @@
                     drake.emit('cloned', _mirror, _item, 'mirror');
                 }
 
-
                 function removeMirrorImage() {
                     if (_mirror) {
                         classes.rm(o.mirrorContainer, 'gu-unselectable');
@@ -1418,7 +1382,6 @@
                         _mirror = null;
                     }
                 }
-
 
                 function getImmediateChild(dropTarget, target) {
                     var immediate = target;
@@ -1431,12 +1394,10 @@
                     return immediate;
                 }
 
-
                 function getReference(dropTarget, target, x, y) {
                     var horizontal = o.direction === 'horizontal';
                     var reference = target !== dropTarget ? inside() : outside();
                     return reference;
-
 
                     function outside() { // slower, but able to figure out any position
                         var len = dropTarget.children.length;
@@ -1456,7 +1417,6 @@
                         return null;
                     }
 
-
                     function inside() { // faster, but only available if dropped inside a child element
                         var rect = target.getBoundingClientRect();
                         if (horizontal) {
@@ -1465,18 +1425,15 @@
                         return resolve(y > rect.top + getRectHeight(rect) / 2);
                     }
 
-
                     function resolve(after) {
                         return after ? nextEl(target) : target;
                     }
                 }
 
-
                 function isCopy(item, container) {
                     return typeof o.copy === 'boolean' ? o.copy : o.copy(item, container);
                 }
             }
-
 
             function touchy(el, op, type, fn) {
                 var touch = {
@@ -1504,7 +1461,6 @@
                 }
             }
 
-
             function whichMouseButton(e) {
                 if (e.touches !== void 0) {
                     return e.touches.length;
@@ -1521,7 +1477,6 @@
                 }
             }
 
-
             function getOffset(el) {
                 var rect = el.getBoundingClientRect();
                 return {
@@ -1529,7 +1484,6 @@
                     top: rect.top + getScroll('scrollTop', 'pageYOffset')
                 };
             }
-
 
             function getScroll(scrollProp, offsetProp) {
                 if (typeof global[offsetProp] !== 'undefined') {
@@ -1541,7 +1495,6 @@
                 return doc.body[scrollProp];
             }
 
-
             function getElementBehindPoint(point, x, y) {
                 var p = point || {};
                 var state = p.className;
@@ -1551,7 +1504,6 @@
                 p.className = state;
                 return el;
             }
-
 
             function never() {
                 return false;
@@ -1590,7 +1542,6 @@
                 return isEditable(getParent(el)); // contentEditable is set to 'inherit'
             }
 
-
             function nextEl(el) {
                 return el.nextElementSibling || manually();
 
@@ -1602,7 +1553,6 @@
                     return sibling;
                 }
             }
-
 
             function getEventHost(e) {
                 // on touchend event, we have to use `e.changedTouches`
@@ -1617,7 +1567,6 @@
                 return e;
             }
 
-
             function getCoord(coord, e) {
                 var host = getEventHost(e);
                 var missMap = {
@@ -1630,9 +1579,7 @@
                 return host[coord];
             }
 
-
             module.exports = dragula;
-
 
         }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
     }, {
@@ -1640,19 +1587,18 @@
         "contra/emitter": 4,
         "crossvent": 5
     }],
-    10: [function(require, module, exports) {
+    10: [function (require, module, exports) {
         var si = typeof setImmediate === 'function',
             tick;
         if (si) {
-            tick = function(fn) {
+            tick = function (fn) {
                 setImmediate(fn);
             };
         } else {
-            tick = function(fn) {
+            tick = function (fn) {
                 setTimeout(fn, 0);
             };
         }
-
 
         module.exports = tick;
     }, {}]
