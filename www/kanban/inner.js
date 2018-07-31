@@ -222,12 +222,9 @@ define([
                     }
                 }
                 var jscolorL = undefined
-                if (boardJSON.jscolor == undefined) {
-                    jscolorL = new jscolor(el,{onchange: onColorChange, valueElement:undefined})
-                    jscolorL.show()
-                    //boardJSON.jscolor = jscolorL
-                    //kanban.onChange();
-                }
+                el._jscLinkedInstance = undefined
+                jscolorL = new jscolor(el,{onchange: onColorChange, valueElement:undefined})
+                jscolorL.show()
                 var currentColor = boardJSON.color;
                 console.log(currentColor)
                 jscolorL.fromString(currentColor)
