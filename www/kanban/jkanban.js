@@ -381,6 +381,11 @@
                 //create container
                 var boardContainer = document.createElement('div');
                 boardContainer.classList.add('kanban-container');
+                var addBoard = document.createElement('div');
+                addBoard.id = 'kanban-addboard';
+                addBoard.setAttribute('class', 'fa fa-plus');
+                boardContainer.appendChild(addBoard);
+
                 self.container = boardContainer;
                 //add boards
                 self.addBoards(self.options.boards);
