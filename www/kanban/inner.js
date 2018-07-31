@@ -103,7 +103,7 @@ define([
             }).click(function (e) { e.stopPropagation(); });
         };
 
-        var kanban = new window.jKanban({
+        var kanban = new jKanban({
             element: '#cp-app-kanban-content',
             gutter: '15px',
             widthBoard: '300px',
