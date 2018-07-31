@@ -43,7 +43,8 @@
                 dropBoard: function (el, target, source, sibling) {},
                 click: function (el) {},
                 boardTitleclick: function (el, boardId) {},
-                buttonClick: function (el, boardId) {}
+                buttonClick: function (el, boardId) {},
+                onChange: function () {}
             };
     
 
@@ -88,6 +89,8 @@
                             self.options.dropBoard(el, target, source, sibling);
                             if (typeof(el.dropfn) === 'function')
                                 el.dropfn(el, target, source, sibling);
+                            // send event that board has changed
+                            self.onChange();
                         });
     
 
@@ -135,6 +138,8 @@
                                 if (typeof(el.dropfn) === 'function')
                                     el.dropfn(el, target, source, sibling);
                             }
+                            // send event that board has changed
+                            self.onChange();
                         })
                 }
             };
@@ -165,6 +170,8 @@
                 nodeItem.dropfn = element.drop;
                 __onclickHandler(nodeItem);
                 board.appendChild(nodeItem);
+                // send event that board has changed
+                self.onChange();
                 return self;
             };
     
@@ -271,6 +278,10 @@
                     //board add
                     self.container.appendChild(boardNode);
                 }
+
+                // send event that board has changed
+                self.onChange();
+
                 return self;
             }
     
@@ -302,6 +313,10 @@
                 if (typeof(el) === 'string')
                     el = self.element.querySelector('[data-eid="' + el + '"]');
                 el.remove();
+
+                // send event that board has changed
+                self.onChange();
+
                 return self;
             };
     
@@ -309,7 +324,12 @@
             this.removeBoard = function (board) {
                 if (typeof(board) === 'string')
                     board = self.element.querySelector('[data-id="' + board + '"]');
-                board.remove();
+                if (board) {
+                    board.remove();
+
+                    // send event that board has changed
+                    self.onChange();
+                }
                 return self;
             }
     
@@ -318,6 +338,10 @@
             this.onButtonClick = function (el) {
     
 
+            }
+
+            this.onChange = function () {
+                self.options.onChange();
             }
 
             this.getBoardsJSON = function (id) {
@@ -351,6 +375,9 @@
                 self.addBoards(self.options.boards);
                 //appends to container
                 self.element.appendChild(self.container);
+
+                // send event that board has changed
+                self.onChange();
             };
     
 
