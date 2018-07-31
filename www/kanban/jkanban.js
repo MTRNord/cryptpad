@@ -52,7 +52,7 @@
                     widthBoard: '250px',
                     responsive: '700',
                     colors: ["yellow", "green", "blue", "red", "orange"],
-                    responsivePercentage: false,
+                    responsivePercentage: true,
                     boards: [],
                     dragBoards: true,
                     addItemButton: false,
