@@ -391,7 +391,7 @@
                                 var currentColor = itemKanban.color;
                                 if (currentColor !== colorL.toString()) {
                                     itemKanban.color = colorL.toString();
-                                    kanban.onChange();
+                                    self.onChange();
                                 }
                             };
 
