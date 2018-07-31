@@ -227,12 +227,14 @@ define([
                     var jscolorL = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
                     jscolorL.show()
                     console.log(jscolorL)
+                    console.log(boardJSON)
                     console.log(boardJSON.jscolor)
                     boardJSON.jscolor = jscolorL
+                    console.log(boardJSON.jscolor)
                     kanban.onChange();
                 }
                 var currentColor = boardJSON.color;
-                jscolorL.fromString(currentColor)
+                boardJSON.jscolor.fromString(currentColor)
             },
             buttonClick: function (el, boardId) {
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
