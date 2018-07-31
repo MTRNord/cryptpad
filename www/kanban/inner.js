@@ -10,6 +10,7 @@ define([
     '/common/modes.js',
     '/customize/messages.js',
     '/kanban/jkanban.js',
+    '/kanban/jscolor.js',
     'css!/kanban/jkanban.css',
 ], function (
     $,
@@ -209,19 +210,17 @@ define([
                 verbose("in color click");
                 var board = $(el.parentNode).attr("data-id");
                 var boardJSON = kanban.getBoardJSON(board);
-                var currentColor = boardJSON.color;
-                verbose("Current color " + currentColor);
-                var index = kanban.options.colors.findIndex(function (element) {
-                    return (element === currentColor);
-                }) + 1;
-                verbose("Next index " + index);
-                if (index >= kanban.options.colors.length) { index = 0; }
-                var nextColor = kanban.options.colors[index];
-                verbose("Next color " + nextColor);
-                boardJSON.color = nextColor;
-                $(el).removeClass("kanban-header-" + currentColor);
-                $(el).addClass("kanban-header-" + nextColor);
-                kanban.onChange();
+                var onFineColorChange = function (jscolor) {
+                    var currentColor = boardJSON.color;
+                    verbose("Current color " + currentColor);
+                    $(el).removeClass("kanban-header-" + currentColor);
+                    $(el).addClass("kanban-header-" + jscolor);
+                    boardJSON.color = jscolor;
+                    kanban.onChange();
+                }
+
+                var color = new jscolor(el,{onFineChange: onFineColorChange(this)})
+                color.show()
             },
             buttonClick: function (el, boardId) {
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
