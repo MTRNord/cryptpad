@@ -211,21 +211,24 @@ define([
                 var board = $(el.parentNode).attr("data-id");
                 var boardJSON = kanban.getBoardJSON(board);
                 el.onchange = function (colorL) {
-                    var currentColor = boardJSON.color;
+                    var elL = el;
+                    var boardL = $(elL.parentNode).attr("data-id");
+                    var boardJSONL = kanban.getBoardJSON(boardL);
+                    var currentColor = boardJSONL.color;
                     verbose("Current color " + currentColor);
                     console.log(colorL);
                     console.log(colorL.toString());
                     if (currentColor !== colorL.toString()) {
-                        $(el).removeClass("kanban-header-" + currentColor);
-                        boardJSON.color = colorL.toString();
+                        $(elL).removeClass("kanban-header-" + currentColor);
+                        boardJSONL.color = colorL.toString();
                         kanban.onChange();
                     }
                 }
-                el._jscLinkedInstance = undefined
+                el._jscLinkedInstance = undefined;
                 var jscolorL = new jscolor(el,{valueElement:undefined});
                 jscolorL.show();
                 var currentColor = boardJSON.color;
-                console.log(el);
+                console.log(el.onchange);
                 jscolorL.fromString(currentColor);
             },
             buttonClick: function (el, boardId) {
