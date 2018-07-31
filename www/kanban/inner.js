@@ -224,7 +224,7 @@ define([
                 if (boardJSON.jscolor == undefined) {
                     var jscolorL = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
                     jscolorL.fromString(boardJSON.color)
-                    jscolorL.Show()
+                    jscolorL.show()
                     boardJSON.jscolor = jscolorL
                 }                
             },
