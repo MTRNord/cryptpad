@@ -213,8 +213,8 @@ define([
                 el.onchange = function (colorL) {
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
-                    console.log(colorL)
-                    console.log(colorL.toString())
+                    console.log(colorL);
+                    console.log(colorL.toString());
                     if (currentColor !== colorL.toString()) {
                         $(el).removeClass("kanban-header-" + currentColor);
                         boardJSON.color = colorL.toString();
@@ -222,11 +222,11 @@ define([
                     }
                 }
                 el._jscLinkedInstance = undefined
-                var jscolorL = new jscolor(el,{valueElement:undefined})
-                jscolorL.show()
+                var jscolorL = new jscolor(el,{valueElement:undefined});
+                jscolorL.show();
                 var currentColor = boardJSON.color;
-                console.log(currentColor)
-                jscolorL.fromString(currentColor)
+                console.log(el);
+                jscolorL.fromString(currentColor);
             },
             buttonClick: function (el, boardId) {
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
