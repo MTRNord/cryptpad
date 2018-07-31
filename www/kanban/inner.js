@@ -308,9 +308,8 @@ define([
                 "color": COLORS[Math.floor(Math.random()*COLORS.length)], // random color
                 "item": [{
                     "title": Messages._getKey('kanban_item', [1]),
-                },
+                }],
                 "jscolor": undefined
-                ]
             }]);
             kanban.onChange();
         });
