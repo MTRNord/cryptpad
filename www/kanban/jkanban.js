@@ -44,6 +44,7 @@
                 click: function (el) {},
                 boardTitleclick: function (el, boardId) {},
                 buttonClick: function (el, boardId) {},
+                colorClick: function (el, boardId) {},
                 onChange: function () {}
             };
     
@@ -400,6 +401,15 @@
                 nodeItem.addEventListener('click', function (e) {
                     e.preventDefault;
                     self.options.boardTitleClick(this, e);
+                    if (typeof (this.clickfn) === 'function')
+                        this.clickfn(this);
+                });
+            }
+
+            function __onColorClickHandler(nodeItem, clickfn) {
+                nodeItem.addEventListener('click', function (e) {
+                    e.preventDefault;
+                    self.options.colorClick(this);
                     if (typeof (this.clickfn) === 'function')
                         this.clickfn(this);
                 });
