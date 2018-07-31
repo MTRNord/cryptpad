@@ -216,21 +216,15 @@ define([
                     console.log(boardJSON.jscolor.toString())
                     if (currentColor !== boardJSON.jscolor.toString()) {
                         $(el).removeClass("kanban-header-" + currentColor);
-                        console.log(boardJSON.color)
-                        console.log(boardJSON.jscolor.toString())
                         boardJSON.color = boardJSON.jscolor.toString();
-                        console.log(boardJSON.color)
                         kanban.onChange();
                     }
                 }
                 if (boardJSON.jscolor == undefined) {
-                    var jscolorL = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
+                    //var jscolorL = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
+                    var jscolorL = new jscolor(el,{valueElement:undefined})
                     jscolorL.show()
-                    console.log(jscolorL)
-                    console.log(boardJSON)
-                    console.log(boardJSON.jscolor)
                     boardJSON.jscolor = jscolorL
-                    console.log(boardJSON.jscolor)
                     kanban.onChange();
                 }
                 var currentColor = boardJSON.color;
