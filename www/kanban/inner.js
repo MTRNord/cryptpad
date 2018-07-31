@@ -223,8 +223,9 @@ define([
                         kanban.onChange();
                     }
                 };
+                var jscolorL;
                 el._jscLinkedInstance = undefined;
-                var jscolorL = new jscolor(el,{onFineChange: onchange(this), valueElement:undefined});
+                jscolorL = new jscolor(el,{onFineChange: onchange(jscolorL), valueElement:undefined});
                 jscolorL.show();
                 var currentColor = boardJSON.color;
                 jscolorL.fromString(currentColor);
