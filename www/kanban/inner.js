@@ -210,7 +210,7 @@ define([
                 verbose("in color click");
                 var board = $(el.parentNode).attr("data-id");
                 var boardJSON = kanban.getBoardJSON(board);
-                var onFineColorChange = function (colorL) {
+                var onColorChange = function (colorL) {
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
                     console.log(boardJSON.jscolor.toString())
@@ -221,10 +221,9 @@ define([
                     }
                 }
                 if (boardJSON.jscolor == undefined) {
-                    //var jscolorL = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
-                    var jscolorL = new jscolor(el,{valueElement:undefined})
+                    var jscolorL = new jscolor(el,{onchange: onColorChange, valueElement:undefined})
                     jscolorL.show()
-                    boardJSON.jscolor = jscolorL
+                    //boardJSON.jscolor = jscolorL
                     kanban.onChange();
                 }
                 var currentColor = boardJSON.color;
