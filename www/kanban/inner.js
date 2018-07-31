@@ -119,7 +119,6 @@ define([
                 }
             },
             click: function (el) {
-                console.log("click!")
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
                 if (kanban.inEditMode) {
                     $(el).focus();

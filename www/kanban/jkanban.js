@@ -31,7 +31,7 @@
          * @author: Riccardo Tartaglia
          */
 
-            //Require dragula
+        //Require dragula
         var dragula = require('dragula');
 
         (function () {
@@ -113,7 +113,7 @@
                                 el.classList.remove('is-moving');
                                 self.options.dropBoard(el, target, source, sibling);
                                 if (typeof (el.dropfn) === 'function')
-                                    el.dropfn(el, target, source, sibling);                                   el.dropfn(el, target, source, sibling);
+                                    el.dropfn(el, target, source, sibling);
 
                                 // TODO: update board object board order
                                 console.log("Drop " + $(el).attr("data-id") + " just before " + (sibling ? $(sibling).attr("data-id") : " end "));
