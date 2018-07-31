@@ -52,7 +52,7 @@
                     widthBoard: '250px',
                     responsive: '700',
                     colors: ["yellow", "green", "blue", "red", "orange"],
-                    responsivePercentage: true,
+                    responsivePercentage: false,
                     boards: [],
                     dragBoards: true,
                     addItemButton: false,
@@ -311,14 +311,14 @@
                         if (self.options.boards !== boards)
                             self.options.boards.push(board);
 
-                        if (!self.options.responsivePercentage) {
+                        /*if (!self.options.responsivePercentage) {
                             //add width to container
                             if (self.container.style.width === '') {
                                 self.container.style.width = parseInt(boardWidth) + (parseInt(self.options.gutter) * 2) + 'px';
                             } else {
                                 self.container.style.width = parseInt(self.container.style.width) + parseInt(boardWidth) + (parseInt(self.options.gutter) * 2) + 'px';
                             }
-                        }
+                        }*/
                         //create node
                         var boardNode = document.createElement('div');
                         boardNode.dataset.id = board.id;
