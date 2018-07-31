@@ -292,6 +292,11 @@
                 var el = self.element.querySelector('[data-eid="' + id + '"]');
                 return el;
             }
+
+            this.findElementPosition = function (el) {
+                // we are looking at the element position in the child array
+                return $(el.parentNode.children).index(el);
+            }
     
 
             this.getBoardElements = function (id) {
@@ -321,9 +326,15 @@
     
 
             }
+
+            this.getBoardsJSON = function (id) {
+                return self.options.boards;
+            }
     
 
-    
+            this.getBoardJSON = function (id) {
+                return __findBoardJSON(id);
+            }
 
             //PRIVATE FUNCTION
             function __extendDefaults(source, properties) {
