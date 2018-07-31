@@ -223,7 +223,8 @@ define([
                 }
                 var jscolorL = undefined
                 el._jscLinkedInstance = undefined
-                jscolorL = new jscolor(el,{onchange: onColorChange, valueElement:undefined})
+                el..onchange = onColorChange
+                jscolorL = new jscolor(el,{valueElement:undefined})
                 jscolorL.show()
                 var currentColor = boardJSON.color;
                 console.log(currentColor)
