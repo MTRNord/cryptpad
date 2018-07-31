@@ -213,16 +213,16 @@ define([
                 var onFineColorChange = function (jscolor) {
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
+                    color.log(jscolor)
                     if (currentColor !== jscolor) {
                         $(el).removeClass("kanban-header-" + currentColor);
-                        $(el).addClass("kanban-header-" + jscolor);
                         boardJSON.color = jscolor;
                         kanban.onChange();
                     }
                     
                 }
 
-                var color = new jscolor(el,{onFineChange: onFineColorChange})
+                var color = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
                 color.show()
             },
             buttonClick: function (el, boardId) {
