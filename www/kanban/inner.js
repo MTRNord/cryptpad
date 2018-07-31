@@ -210,7 +210,7 @@ define([
                 verbose("in color click");
                 var board = $(el.parentNode).attr("data-id");
                 var boardJSON = kanban.getBoardJSON(board);
-                el.onchange = function (colorL) {
+                var onchange = function (colorL) {
                     var elL = el;
                     var boardL = $(elL.parentNode).attr("data-id");
                     var boardJSONL = kanban.getBoardJSON(boardL);
@@ -223,9 +223,10 @@ define([
                         boardJSONL.color = colorL.toString();
                         kanban.onChange();
                     }
-                }
+                };
                 el._jscLinkedInstance = undefined;
                 var jscolorL = new jscolor(el,{valueElement:undefined});
+                el.addEventListener("change", onchange(jscolorL));
                 jscolorL.show();
                 var currentColor = boardJSON.color;
                 console.log(el.onchange);
