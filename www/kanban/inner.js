@@ -221,9 +221,12 @@ define([
                     }
                     
                 }
-
-                var color = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
-                color.fromString(boardJSON.color)
+                if (boardJSON.jscolor == undefined) {
+                    var jscolorL = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
+                    boardJSON.jscolor = jscolorL
+                    color.fromString(boardJSON.color)
+                    color.Show()
+                }                
             },
             buttonClick: function (el, boardId) {
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
