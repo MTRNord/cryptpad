@@ -210,7 +210,7 @@ define([
                 verbose("in color click");
                 var board = $(el.parentNode).attr("data-id");
                 var boardJSON = kanban.getBoardJSON(board);
-                var onColorChange = function (colorL) {
+                el.onchange = function (colorL) {
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
                     console.log(colorL)
@@ -221,10 +221,8 @@ define([
                         kanban.onChange();
                     }
                 }
-                var jscolorL = undefined
                 el._jscLinkedInstance = undefined
-                el.onchange = onColorChange
-                jscolorL = new jscolor(el,{valueElement:undefined})
+                var jscolorL = new jscolor(el,{valueElement:undefined})
                 jscolorL.show()
                 var currentColor = boardJSON.color;
                 console.log(currentColor)
@@ -306,8 +304,7 @@ define([
                 "color": COLORS[Math.floor(Math.random()*COLORS.length)], // random color
                 "item": [{
                     "title": Messages._getKey('kanban_item', [1]),
-                }],
-                "jscolor": undefined
+                }]
             }]);
             kanban.onChange();
         });
