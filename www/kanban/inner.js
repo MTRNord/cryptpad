@@ -213,7 +213,7 @@ define([
                 var onFineColorChange = function (jscolor) {
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
-                    color.log(jscolor)
+                    console.log(jscolor)
                     if (currentColor !== jscolor) {
                         $(el).removeClass("kanban-header-" + currentColor);
                         boardJSON.color = jscolor.toString();
