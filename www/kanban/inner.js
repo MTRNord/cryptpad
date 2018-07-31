@@ -216,14 +216,14 @@ define([
                     color.log(jscolor)
                     if (currentColor !== jscolor) {
                         $(el).removeClass("kanban-header-" + currentColor);
-                        boardJSON.color = jscolor;
+                        boardJSON.color = jscolor.toString();
                         kanban.onChange();
                     }
                     
                 }
 
                 var color = new jscolor(el,{onFineChange: onFineColorChange, valueElement:undefined})
-                color.show()
+                color.fromString(boardJSON.color)
             },
             buttonClick: function (el, boardId) {
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
