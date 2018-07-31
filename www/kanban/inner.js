@@ -216,7 +216,6 @@ define([
                     var boardJSONL = kanban.getBoardJSON(boardL);
                     var currentColor = boardJSONL.color;
                     verbose("Current color " + currentColor);
-                    console.log(colorL.toString());
                     if (currentColor !== colorL.toString()) {
                         $(elL).removeClass("kanban-header-" + currentColor);
                         boardJSONL.color = colorL.toString();
