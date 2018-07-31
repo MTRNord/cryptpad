@@ -399,6 +399,11 @@
                             nodeItem._jscLinkedInstance = undefined;
                             jscolorL = new jscolor(nodeItem,{onFineChange: onchange, valueElement:undefined});
                             var currentColor = itemKanban.color;
+                            // If not defined dont have it undefined
+                            if (currentColor == undefined) {
+                                currentColor = ''
+                            }
+                            console.log(currentColor);
                             jscolorL.fromString(currentColor);
 
                             contentBoard.appendChild(nodeItem);
