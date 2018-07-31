@@ -211,15 +211,15 @@ define([
                 var board = $(el.parentNode).attr("data-id");
                 var boardJSON = kanban.getBoardJSON(board);
                 var onFineColorChange = function (colorL) {
-                    var elL = el
-                    var board = $(elL.parentNode).attr("data-id");
-                    var boardJSON = kanban.getBoardJSON(board);
                     var currentColor = boardJSON.color;
                     verbose("Current color " + currentColor);
                     console.log(boardJSON.jscolor.toString())
                     if (currentColor !== boardJSON.jscolor.toString()) {
-                        $(elL).removeClass("kanban-header-" + currentColor);
+                        $(el).removeClass("kanban-header-" + currentColor);
+                        console.log(boardJSON.color)
+                        console.log(boardJSON.jscolor.toString())
                         boardJSON.color = boardJSON.jscolor.toString();
+                        console.log(boardJSON.color)
                         kanban.onChange();
                     }
                 }
