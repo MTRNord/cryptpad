@@ -379,18 +379,21 @@
             function __setBoard() {
                 self.element = document.querySelector(self.options.element);
                 //create container
+                var boardContainerOuter = document.createElement('div');
+                boardContainerOuter.classList.add('kanban-container-outer');
                 var boardContainer = document.createElement('div');
                 boardContainer.classList.add('kanban-container');
+                boardContainerOuter.appendChild(boardContainer);
                 var addBoard = document.createElement('div');
                 addBoard.id = 'kanban-addboard';
                 addBoard.setAttribute('class', 'fa fa-plus');
-                boardContainer.appendChild(addBoard);
+                boardContainerOuter.appendChild(addBoard);
 
                 self.container = boardContainer;
                 //add boards
                 self.addBoards(self.options.boards);
                 //appends to container
-                self.element.appendChild(self.container);
+                self.element.appendChild(boardContainerOuter);
 
                 // send event that board has changed
                 self.onChange();
