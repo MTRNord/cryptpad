@@ -163,7 +163,6 @@ define([
 
             },
             boardTitleClick: function (el, e) {
-                console.log("triggered?")
                 e.stopPropagation();
                 if (framework.isReadOnly() || framework.isLocked()) { return; }
                 if (kanban.inEditMode) {

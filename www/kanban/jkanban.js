@@ -35,6 +35,7 @@
                 dragBoards: true,
                 addItemButton: false,
                 buttonContent: '+',
+                colors: ["yellow", "green", "blue", "red", "orange"],
                 dragEl: function (el, source) {},
                 dragendEl: function (el) {},
                 dropEl: function (el, target, source, sibling) {},
@@ -238,6 +239,9 @@
                     allClasses.map(function (value) {
                         headerBoard.classList.add(value);
                     });
+                    if (board.color !== '' && board.color !== undefined) {
+                        headerBoard.classList.add("kanban-header-" + board.color);
+                    }
                     titleBoard = document.createElement('div');
                     titleBoard.classList.add('kanban-title-board');
                     titleBoard.innerHTML = board.title;
